@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔄 Réinitialisation — Rando des fifres 2026</title>
+<style>
+  *{box-sizing:border-box}
+  body{
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+    background:#1b5e20;
+    margin:0;
+    padding:20px;
+    color:#333;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center
+  }
+  .card{
+    background:#f4f7f6;
+    border-radius:16px;
+    padding:28px 22px;
+    max-width:380px;
+    width:100%;
+    text-align:center;
+    box-shadow:0 8px 28px rgba(0,0,0,.3)
+  }
+  .logo{
+    font-size:3em;
+    margin-bottom:8px
+  }
+  h1{
+    color:#1b5e20;
+    font-size:1.25em;
+    margin:0 0 6px
+  }
+  .subtitle{
+    color:#666;
+    font-size:.85em;
+    margin-bottom:18px
+  }
+  .status{
+    background:#e8f5e9;
+    border:2px solid #2e7d32;
+    border-radius:10px;
+    padding:14px;
+    margin:16px 0;
+    font-size:.95em;
+    font-weight:bold;
+    color:#1b5e20;
+    line-height:1.4
+  }
+  .status.error{
+    background:#ffebee;
+    border-color:#c62828;
+    color:#c62828
+  }
+  .status.info{
+    background:#e3f2fd;
+    border-color:#0288d1;
+    color:#0d47a1
+  }
+  .details{
+    font-size:.78em;
+    color:#555;
+    text-align:left;
+    background:#fff;
+    border:1px solid #ddd;
+    border-radius:8px;
+    padding:10px 12px;
+    margin:12px 0;
+    line-height:1.45
+  }
+  .btn{
+    display:inline-block;
+    background:#e67e22;
+    color:white;
+    border:none;
+    padding:12px 22px;
+    font-size:1em;
+    font-weight:bold;
+    border-radius:8px;
+    cursor:pointer;
+    text-decoration:none;
+    margin-top:8px;
+    box-shadow:0 4px 10px rgba(0,0,0,.15)
+  }
+  .btn:active{transform:scale(.98)}
+  .btn-secondary{
+    background:#7f8c8d;
+    margin-top:10px
+  }
+  .footer{
+    margin-top:18px;
+    font-size:.65em;
+    color:#888;
+    line-height:1.4
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">🔄</div>
+  <h1>Réinitialisation</h1>
+  <p class="subtitle">Rando des fifres 2026 — JMG</p>
+
+  <div id="status" class="status info">
+    Traitement en cours…
+  </div>
+
+  <div id="details" class="details" style="display:none"></div>
+
+  <a id="btn-home" class="btn" href="index.html" style="display:none">
+    🏠 Retour à l'application
+  </a>
+
+  <button id="btn-retry" class="btn btn-secondary" style="display:none" onclick="doReset()">
+    Réessayer
+  </button>
+
+  <div class="footer">
+    🔒 Conforme RGPD — Zéro tracking<br>
+    © 2026 - PortaNoval Conception
+  </div>
+</div>
+
+<script>
+(function(){
+  const STORAGE_KEY = 'rdf2026';
+
+  function doReset(){
+    const statusEl = document.getElementById('status');
+    const detailsEl = document.getElementById('details');
+    const btnHome = document.getElementById('btn-home');
+    const btnRetry = document.getElementById('btn-retry');
+
+    btnHome.style.display = 'none';
+    btnRetry.style.display = 'none';
+    detailsEl.style.display = 'none';
+    statusEl.className = 'status info';
+    statusEl.textContent = 'Traitement en cours…';
+
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      let hadData = false;
+      let summary = '';
+
+      if(raw){
+        hadData = true;
+        try{
+          const data = JSON.parse(raw);
+          summary =
+            '• Dossard : ' + (data.dossardNum || '—') + '\n' +
+            '• Parcours : ' + (data.selectedRoute || '—') + '\n' +
+            '• Tampons : ' + (data.stamps ? Object.keys(data.stamps).length : 0);
+        }catch(e){
+          summary = 'Données présentes (format non lisible).';
+        }
+      }
+
+      localStorage.removeItem(STORAGE_KEY);
+
+      // Vérification
+      const stillThere = localStorage.getItem(STORAGE_KEY);
+      if(stillThere !== null){
+        throw new Error('La suppression a échoué (données encore présentes).');
+      }
+
+      statusEl.className = 'status';
+      if(hadData){
+        statusEl.innerHTML = '✅ Données effacées avec succès';
+        detailsEl.style.display = 'block';
+        detailsEl.innerHTML =
+          '<strong>Anciennes données supprimées :</strong><br>' +
+          summary.replace(/\n/g, '<br>');
+      }else{
+        statusEl.innerHTML = '✅ Aucune donnée à effacer<br><span style="font-weight:normal;font-size:.9em">Le stockage local était déjà vide.</span>';
+      }
+
+      btnHome.style.display = 'inline-block';
+
+    }catch(err){
+      statusEl.className = 'status error';
+      statusEl.innerHTML = '❌ Erreur lors de la réinitialisation';
+      detailsEl.style.display = 'block';
+      detailsEl.textContent = String(err.message || err);
+      btnRetry.style.display = 'inline-block';
+      btnHome.style.display = 'inline-block';
+    }
+  }
+
+  // Lancement automatique au chargement (scan QR → page ouverte → reset)
+  doReset();
+
+  // Expose pour le bouton réessayer
+  window.doReset = doReset;
+})();
+</script>
+</body>
+</html>

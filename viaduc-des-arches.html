@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Étape du Parcours : Viaduc et Dégustation</title>
+    <style>
+        body { font-family: sans-serif; background: #fdfaf6; padding: 15px; color: #333; line-height: 1.5; }
+        .container { display: flex; flex-direction: column; gap: 30px; align-items: center; }
+        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-top: 8px solid #2e7d32; width: 100%; max-width: 500px; }
+        h1 { color: #1b5e20; font-size: 1.5em; text-align: center; margin-top: 0; }
+        .info-box { background: #f1f8e9; border-radius: 8px; padding: 15px; margin: 15px 0; border-left: 5px solid #2e7d32; }
+        .quiz-box { background: #fff3e0; padding: 15px; border-radius: 8px; margin-top: 20px; }
+        .btn { display: block; width: 100%; padding: 12px; margin: 8px 0; border: none; border-radius: 6px; background: #2e7d32; color: white; font-weight: bold; cursor: pointer; font-size: 1em; }
+        .feedback { text-align: center; font-weight: bold; margin-top: 10px; min-height: 1.2em; }
+        .fact { font-style: italic; color: #555; font-size: 0.9em; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 1. FICHE HISTORIQUE -->
+        <div class="card">
+            <h1>Le Viaduc des Arches</h1>
+            <div class="info-box">
+                <p><strong>📖 Thème :</strong> Architecture</p>
+                <p>Bien que moins connu que celui du centre, ce viaduc possède des fondations à plus de 10 mètres sous terre pour stabiliser le terrain argileux.</p>
+                <p class="fact"><strong>💡 Saviez-vous que ?</strong> Une partie des pierres a été réutilisée pour construire des murets après l'arrêt du train.</p>
+            </div>
+            
+            <div class="quiz-box">
+                <h3 style="margin-top:0; color:#e65100;">🧩 LE QUIZ DU MARCHEUR</h3>
+                <p><strong>À quelle profondeur sont les fondations ?</strong></p>
+                <div>
+                    <button class="btn" onclick="check('1 mètre', '10 mètres', 'feedback-1')">1 mètre</button>
+                    <button class="btn" onclick="check('10 mètres', '10 mètres', 'feedback-1')">10 mètres</button>
+                    <button class="btn" onclick="check('100 mètres', '10 mètres', 'feedback-1')">100 mètres</button>
+                </div>
+                <p id="feedback-1" class="feedback"></p>
+            </div>
+        </div>
+
+        <!-- 2. CARTE DE VISITE -->
+        <div class="card">
+            <h1>Coteaux du Lyonnais</h1>
+            <div class="info-box">
+                <p><strong>📖 Thème :</strong> Boutique & Dégustation</p>
+                <p><strong>📍 Adresse :</strong> À Taluyers, à 25 minutes de Lyon.</p>
+                <p><strong>🕒 Horaires :</strong></p>
+                <ul>
+                    <li>Lundi au jeudi : Sur RDV (9h - 17h)</li>
+                    <li>Vendredi : 15h30 - 18h30</li>
+                    <li>Samedi : 10h - 13h & 14h30 - 18h30</li>
+                </ul>
+                <p class="fact"><strong>💡 Saviez-vous que ?</strong> Le domaine bénéficie des certifications Agriculture Biologique (AB) et Demeter (biodynamie).</p>
+            </div>
+            
+            <div class="quiz-box">
+                <h3 style="margin-top:0; color:#e65100;">🧩 LE QUIZ DU GOURMAND</h3>
+                <p><strong>À quelle distance de Lyon se situe le domaine à Taluyers ?</strong></p>
+                <div>
+                    <button class="btn" onclick="check('10 minutes', '25 minutes', 'feedback-2')">10 minutes</button>
+                    <button class="btn" onclick="check('25 minutes', '25 minutes', 'feedback-2')">25 minutes</button>
+                    <button class="btn" onclick="check('1 heure', '25 minutes', 'feedback-2')">1 heure</button>
+                </div>
+                <p id="feedback-2" class="feedback"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function check(selection, correct, feedbackId) {
+            const f = document.getElementById(feedbackId);
+            if(selection === correct) {
+                f.innerText = "Parfait ! ✅ Bonne réponse.";
+                f.style.color = "#2e7d32";
+            } else {
+                f.innerText = "Non ! ❌ C'était : " + correct;
+                f.style.color = "#d32f2f";
+            }
+        }
+    </script>
+</body>
+</html>
